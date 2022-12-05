@@ -48,7 +48,7 @@ namespace FlightsCode.DBconfig
 
             //modelBuilder.Entity<Country>()
             //      .HasMany(c => c.Companies)
-            //      .WithOne();
+            //      .WithOne(e => e.Country);
 
         }
         //one dataset prop for each table:

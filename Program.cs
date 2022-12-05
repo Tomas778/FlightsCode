@@ -34,13 +34,23 @@ namespace FlightsCode
                 connection.Open();
                // string tbl = "create table Person (SqNr integer primary key, Sdsds integer, NAME text);";
                // SQLiteCommand command = new SQLiteCommand(tbl, connection);
-                string coutries_tbl = "create table Country (Id integer primary key, Identifier integer, Code text, Name text, Continent text, BelongsToEU bool);";
+                string coutries_tbl = "create table Country (Id integer primary key autoincrement, " +
+                    "Identifier integer, Code text, Name text, Continent text, BelongsToEU bool);";
                 SQLiteCommand command1 = new SQLiteCommand(coutries_tbl, connection);
-                string companies_tbl = "create table Company (Id integer primary key, Identifier integer, Name text, CountryId integer);";
+                string companies_tbl = "create table Company (Id integer primary key autoincrement, " +
+                    "Identifier integer, Name text, CountryId integer, " +
+                    "FOREIGN KEY(CountryId) REFERENCES Country(Id));";
                 SQLiteCommand command2 = new SQLiteCommand(companies_tbl, connection);
-                string models_tbl = "create table Model (Id integer primary key, Identifier integer, Number text, Description text);";
+                string models_tbl = "create table Model (Id integer primary key autoincrement, " +
+                    "Identifier integer, Number text, Description text);";
                 SQLiteCommand command3 = new SQLiteCommand(models_tbl, connection);
-                string aircrafts_tbl = "create table Aircraft (Id integer primary key, Identifier integer, ModelId integer, CompanyId integer, TailNumber text);";
+                string aircrafts_tbl = "create table Aircraft (Id integer primary key autoincrement, " +
+                    "Identifier integer, " +
+                    "ModelId integer, " +
+                    "CompanyId integer, " +
+                    "TailNumber text, " +
+                    "FOREIGN KEY(ModelId) REFERENCES Model(Id), " +
+                    "FOREIGN KEY(CompanyId) REFERENCES Company(Id));";
                 SQLiteCommand command4 = new SQLiteCommand(aircrafts_tbl, connection);
                // command.ExecuteNonQuery();
                 command1.ExecuteNonQuery();
@@ -65,26 +75,30 @@ namespace FlightsCode
                 ctx.Countries.Add(new Country(3, "PL", "Poland", "Europe", true));
                 ctx.Countries.Add(new Country(7, "AE", "United Arab Emirates", "Asia", false));
                 ctx.Countries.Add(new Country(6, "AM", "Armenia", "Asia", false));
+                ctx.SaveChanges();
+                ctx.Countries.Where(x => x.Code == "LT").FirstOrDefault()
+                   .Companies.Add(new Company() { Identifier = 10, Name = "Neee Bill" });
 
-                ctx.Companies.Add(new Company(15, "BELAVIA", 1));
-                ctx.Companies.Add(new Company(16, "GLOBAL AIRPARTS", 5));
-                ctx.Companies.Add(new Company(17, "STARWARES.", 3));
-                ctx.Companies.Add(new Company(18, "RANGER AIR", 7));
-                ctx.Companies.Add(new Company(19, "CASP-CO", 6));
-                ctx.Models.Add(new Model(3, "B737-300", "BOEING 737-300"));
-                ctx.Models.Add(new Model(4, "B737-400", "BOEING 737-400"));
-                ctx.Models.Add(new Model(5, "B737-500", "BOEING 737-500"));
-                ctx.Aircrafts.Add(new Aircraft(100, 3, 17, "LY-SPH"));
-                ctx.Aircrafts.Add(new Aircraft(101, 3, 16, "TC-KLA"));
-                ctx.Aircrafts.Add(new Aircraft(102, 4, 15, "EI-FBH"));
-                ctx.Aircrafts.Add(new Aircraft(103, 5, 19, "LY-SPC"));
-                ctx.Aircrafts.Add(new Aircraft(104, 4, 15, "UR-WRK"));
-                ctx.Aircrafts.Add(new Aircraft(105, 3, 18, "VP-BHX"));
+
+                // ctx.Companies.Add(new Company(15, "BELAVIA", 1));
+                //ctx.Companies.Add(new Company(16, "GLOBAL AIRPARTS", 5));
+                //ctx.Companies.Add(new Company(17, "STARWARES.", 3));
+                //ctx.Companies.Add(new Company(18, "RANGER AIR", 7));
+                //ctx.Companies.Add(new Company(19, "CASP-CO", 6));
+                //ctx.Models.Add(new Model(3, "B737-300", "BOEING 737-300"));
+                //ctx.Models.Add(new Model(4, "B737-400", "BOEING 737-400"));
+                //ctx.Models.Add(new Model(5, "B737-500", "BOEING 737-500"));
+                //ctx.Aircrafts.Add(new Aircraft(100, 3, 17, "LY-SPH"));
+                //ctx.Aircrafts.Add(new Aircraft(101, 3, 16, "TC-KLA"));
+                //ctx.Aircrafts.Add(new Aircraft(102, 4, 15, "EI-FBH"));
+                //ctx.Aircrafts.Add(new Aircraft(103, 5, 19, "LY-SPC"));
+                //ctx.Aircrafts.Add(new Aircraft(104, 4, 15, "UR-WRK"));
+                //ctx.Aircrafts.Add(new Aircraft(105, 3, 18, "VP-BHX"));
                 ctx.SaveChanges();
             }
 
-            List<Aircraft> test = GetBelongsToEU();
-            //GetBelongsToEU();
+          //  List<Aircraft> test = GetBelongsToEU();
+            
             Console.ReadLine();
         }
 
