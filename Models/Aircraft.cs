@@ -12,12 +12,15 @@ namespace FlightsCode.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public int AircraftId { get; set; }
         public int Identifier { get; private set; }
-      //  [ForeignKey("Id")]
-        public int ModelId { get; set; }
-      //  [ForeignKey("Id")]
-        public int CompanyId { get; set; }
+        [ForeignKey("Model")]
+        public int ModelTblId { get; set; }
+        
+        [ForeignKey("Company")]
+        public int CompanyTblId { get; set; }
+     
+
         public string TailNumber { get; set; }
         public Model Model { get; set; }
         public Company Company { get; set; }
@@ -31,8 +34,8 @@ namespace FlightsCode.Models
         {
             //SqNr = seqNr;
             Identifier = identifier;
-            ModelId = modelId;
-            CompanyId = companyId;
+            ModelTblId = modelId;
+            CompanyTblId = companyId;
             TailNumber = tailNumber;
         }
     }

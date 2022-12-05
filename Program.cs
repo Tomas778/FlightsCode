@@ -34,23 +34,23 @@ namespace FlightsCode
                 connection.Open();
                // string tbl = "create table Person (SqNr integer primary key, Sdsds integer, NAME text);";
                // SQLiteCommand command = new SQLiteCommand(tbl, connection);
-                string coutries_tbl = "create table Country (Id integer primary key autoincrement, " +
+                string coutries_tbl = "create table Country (CountryId integer primary key autoincrement, " +
                     "Identifier integer, Code text, Name text, Continent text, BelongsToEU bool);";
                 SQLiteCommand command1 = new SQLiteCommand(coutries_tbl, connection);
-                string companies_tbl = "create table Company (Id integer primary key autoincrement, " +
-                    "Identifier integer, Name text, CountryId integer, " +
-                    "FOREIGN KEY(CountryId) REFERENCES Country(Id));";
+                string companies_tbl = "create table Company (CompanyId integer primary key autoincrement, " +
+                    "Identifier integer, Name text, CountryTblId integer, " +
+                    "FOREIGN KEY(CountryTblId) REFERENCES Country(CountryId));";
                 SQLiteCommand command2 = new SQLiteCommand(companies_tbl, connection);
-                string models_tbl = "create table Model (Id integer primary key autoincrement, " +
+                string models_tbl = "create table Model (ModelId integer primary key autoincrement, " +
                     "Identifier integer, Number text, Description text);";
                 SQLiteCommand command3 = new SQLiteCommand(models_tbl, connection);
-                string aircrafts_tbl = "create table Aircraft (Id integer primary key autoincrement, " +
+                string aircrafts_tbl = "create table Aircraft (AircraftId integer primary key autoincrement, " +
                     "Identifier integer, " +
-                    "ModelId integer, " +
-                    "CompanyId integer, " +
+                    "ModelTblId integer, " +
+                    "CompanyTblId integer, " +
                     "TailNumber text, " +
-                    "FOREIGN KEY(ModelId) REFERENCES Model(Id), " +
-                    "FOREIGN KEY(CompanyId) REFERENCES Company(Id));";
+                    "FOREIGN KEY(ModelTblId) REFERENCES Model(ModelId), " +
+                    "FOREIGN KEY(CompanyTblId) REFERENCES Company(CompanyId));";
                 SQLiteCommand command4 = new SQLiteCommand(aircrafts_tbl, connection);
                // command.ExecuteNonQuery();
                 command1.ExecuteNonQuery();
@@ -76,9 +76,12 @@ namespace FlightsCode
                 ctx.Countries.Add(new Country(7, "AE", "United Arab Emirates", "Asia", false));
                 ctx.Countries.Add(new Country(6, "AM", "Armenia", "Asia", false));
                 ctx.SaveChanges();
-                ctx.Countries.Where(x => x.Code == "LT").FirstOrDefault()
-                   .Companies.Add(new Company() { Identifier = 10, Name = "Neee Bill" });
 
+                //var test = new Company() { Identifier = 10, Name = "Neee Bill" };
+                ctx.Companies.Add(new Company(15, "BELAVIA", 1));
+                //ctx.Countries.Where(x => x.Code == "LT").FirstOrDefault()
+                //   .Companies.Add(test);
+              //  ctx.Companies.Add(test);
 
                 // ctx.Companies.Add(new Company(15, "BELAVIA", 1));
                 //ctx.Companies.Add(new Company(16, "GLOBAL AIRPARTS", 5));
@@ -155,15 +158,15 @@ namespace FlightsCode
                 {
 
                     var firma = ctx.Companies
-                        .Where(b => b.Identifier == Aircraft.CompanyId)
+                        .Where(b => b.Identifier == Aircraft.CompanyTblId)
                         .FirstOrDefault();
 
                     var salis = ctx.Countries
-                        .Where(b => b.Identifier == firma.CountryId)
+                        .Where(b => b.Identifier == firma.CountryTblId)
                         .FirstOrDefault();
 
                     var modelis = ctx.Models
-                        .Where(b => b.Identifier == Aircraft.ModelId)
+                        .Where(b => b.Identifier == Aircraft.ModelTblId)
                         .FirstOrDefault();
 
                     if (salis.BelongsToEU)

@@ -13,7 +13,7 @@ namespace FlightsCode.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int Id { get; private set; }
+        public int CountryId { get; set; }
         public int Identifier { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
