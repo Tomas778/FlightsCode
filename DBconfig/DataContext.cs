@@ -6,7 +6,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.SQLite;
 using System.Diagnostics;
 
-
+//1
 namespace FlightsCode.DBconfig
 {
     public class DataContext:DbContext
