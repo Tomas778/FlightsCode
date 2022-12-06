@@ -4,6 +4,7 @@ using FlightsCode.PrepeareTables;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.ComTypes;
@@ -129,21 +130,20 @@ namespace FlightsCode
                     ctx.Companies.FirstOrDefault(x => x.Name == "ArabAirlines")));
 
                 ctx.SaveChanges();          //Save Aircrafts
-
- 
-
-                List<Aircraft> EUAircrafts = ctx.GetBelongsToEU();  //Get EU Planes
-                List<Aircraft> NonEUAirfcrafts = ctx.GetNonEUAircrafts();  //Get Non EU Planes
-
                 ctx.Dispose();
             }
 
-            //using (var ctx = new DataContext())
-            //{
-            //    ctx.Database.Initialize(true);
-            //    ctx.GetBelongsToEU();
-            //}
-            
+
+            //Get\Lists lists
+            using (var ctx = new DataContext())
+            {
+                List<Aircraft> EUAircrafts =                                          //Returns EU Aircrafts
+                    ctx.Aircrafts.Where(x => x.Company.Country.BelongsToEU).ToList();
+
+                List<Aircraft> NonEUAirfcrafts =                                      //Returns Non EU Aircrafts
+                    ctx.Aircrafts.Where(x => !x.Company.Country.BelongsToEU).ToList();
+
+            }
 
             Console.ReadLine(); //Stop
         }

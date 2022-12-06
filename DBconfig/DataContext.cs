@@ -61,43 +61,43 @@ namespace FlightsCode.DBconfig
         public DbSet<Model> Models { get; set; }
         public DbSet<Aircraft> Aircrafts { get; set; }
 
-        public List<Aircraft> GetBelongsToEU()
-        {
-            List<Aircraft> EUAircrafts = new List<Aircraft>();
-            DataContext ctx = new DataContext();
+        //public List<Aircraft> GetBelongsToEU()
+        //{
+        //    List<Aircraft> EUAircrafts = new List<Aircraft>();
+        //    DataContext ctx = new DataContext();
 
-            foreach (Aircraft Aircraft in Aircrafts)
-                {
-                    if (Aircraft.Company.Country.BelongsToEU)
-                    {
-                    EUAircrafts.Add(Aircraft);
+        //    foreach (Aircraft Aircraft in Aircrafts)
+        //        {
+        //            if (Aircraft.Company.Country.BelongsToEU)
+        //            {
+        //            EUAircrafts.Add(Aircraft);
 
-                    Console.WriteLine(Aircraft.Model.Number + " / "
-                            + Aircraft.TailNumber + " / "
-                            + Aircraft.Company.Name + " / "
-                            + Aircraft.Company.Country.Name);
-                    }
-                }
-            return EUAircrafts;
-        }
-        public List<Aircraft> GetNonEUAircrafts()
-        {
-            List<Aircraft> NonEUAircrafts = new List<Aircraft>();
-            DataContext ctx = new DataContext();
+        //            Console.WriteLine(Aircraft.Model.Number + " / "
+        //                    + Aircraft.TailNumber + " / "
+        //                    + Aircraft.Company.Name + " / "
+        //                    + Aircraft.Company.Country.Name);
+        //            }
+        //        }
+        //    return EUAircrafts;
+        //}
+        //public List<Aircraft> GetNonEUAircrafts()
+        //{
+        //    List<Aircraft> NonEUAircrafts = new List<Aircraft>();
+        //    DataContext ctx = new DataContext();
 
-            foreach (Aircraft Aircraft in Aircrafts)
-            {
-                if (!Aircraft.Company.Country.BelongsToEU)
-                {
-                    NonEUAircrafts.Add(Aircraft);
+        //    foreach (Aircraft Aircraft in Aircrafts)
+        //    {
+        //        if (!Aircraft.Company.Country.BelongsToEU)
+        //        {
+        //            NonEUAircrafts.Add(Aircraft);
 
-                    Console.WriteLine(Aircraft.Model.Number + " / "
-                            + Aircraft.TailNumber + " / "
-                            + Aircraft.Company.Name + " / "
-                            + Aircraft.Company.Country.Name);
-                }
-            }
-            return NonEUAircrafts;
-        }
+        //            Console.WriteLine(Aircraft.Model.Number + " / "
+        //                    + Aircraft.TailNumber + " / "
+        //                    + Aircraft.Company.Name + " / "
+        //                    + Aircraft.Company.Country.Name);
+        //        }
+        //    }
+        //    return NonEUAircrafts;
+        //}
     }
 }
