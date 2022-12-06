@@ -68,7 +68,6 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Country.cs" />
-    <Compile Include="Models\Person.cs" />
     <Compile Include="PrepeareTables\CountryTable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -80,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\Debug\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Aircrafts.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -12,26 +12,22 @@ namespace FlightsCode.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int CompanyId { get; set; }
-        public int Identifier { get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
 
-        [ForeignKey("Country")]
-        public int CountryTblId { get; set; }
-
         public ICollection<Aircraft> Aircrafts { get; set; }
+
+        public int CountryId { get; set; }
         public Country Country { get; set; }
 
         public Company()
         {
 
         }
-        public Company(int identifier, string name, int countryId)
+        public Company(string name, Country country)
         {
-            //SqNr = seqNr;
-            Identifier = identifier;
             Name = name;
-            CountryTblId = countryId;
+            Country = country;
         }
     }
 }

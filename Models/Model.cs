@@ -12,21 +12,18 @@ namespace FlightsCode.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int ModelId { get; set; }
-        public int Identifier { get; private set; }
+        public int Id { get; set; }
         public string Number { get; set; }
         public string Description { get; set; }
         public ICollection<Aircraft> Aircrafts { get; set; }
 
         public Model()
-            {
-
-            }
-
-        public Model(int identifier, string number, string description)
         {
-           // SqNr = SeqNr;
-            Identifier = identifier;
+
+        }
+
+        public Model(string number, string description)
+        {
             Number = number;
             Description = description;
         }

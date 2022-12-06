@@ -13,25 +13,19 @@ namespace FlightsCode.Models
     {
         [Key]
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
-        public int CountryId { get; set; }
-        public int Identifier { get; set; }
+        public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public string Continent { get; set; }
         public bool BelongsToEU { get; set; }
         public ICollection<Company> Companies { get; set; }
 
-        public Country()
-        {
+        public Country() { }
 
-        }
-
-        public Country( int identifier, string countryCode, string countryName, string continent, bool belongsToEU)
+        public Country(string code, string name, string continent, bool belongsToEU) 
         {
-           // Id = id;
-            Identifier = identifier;
-            Code = countryCode;
-            Name = countryName;
+            Code = code;
+            Name = name;
             Continent = continent;
             BelongsToEU = belongsToEU;
         }

@@ -1,4 +1,6 @@
 ﻿using FlightsCode.Models;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.SQLite;
@@ -26,34 +28,30 @@ namespace FlightsCode.DBconfig
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<Company>()
-            //.HasRequired(m => m.Name)
-            //.WithOptional()
-            //.Map(m => { m.MapKey("CountryId"); });
 
-            //modelBuilder.Entity<Model>()
-            //    .HasMany<Aircraft>(g => g.Aircrafts)
-            //    .WithRequired(g => g.Model)
-            //    .HasForeignKey(g => g.ModelId);
+            //Releations, fluentAPI...
+            modelBuilder.Entity<Country>()
+                           .HasMany(c => c.Companies);
 
-            //modelBuilder.Entity<Company>()
-            //    .HasRequired<Country>(s => s.Country)
-            //    .WithMany(g => g.Companies)
-            //    .HasForeignKey<int>(s => s.CountryId);
+            modelBuilder.Entity<Company>()
+                .HasMany(c => c.Aircrafts)
+                .WithRequired(c => c.Company)
+                .HasForeignKey(c => c.CompanyId);
 
-            //modelBuilder.Entity<Aircraft>()
-            //    .HasRequired<Company>(s => s.Company)
-            //    .WithMany(g => g.Aircrafts)
-            //    .HasForeignKey<int>(s => s.CompanyId);
+            modelBuilder.Entity<Model>()
+                .HasMany(m => m.Aircrafts)
+                .WithRequired(m => m.Model)
+                .HasForeignKey(m => m.ModelId);
 
-            //modelBuilder.Entity<Aircraft>()
-            //    .HasRequired<Model>(s => s.Model)
-            //    .WithMany(g => g.Aircrafts)
-            //    .HasForeignKey<int>(s => s.ModelId);
+            modelBuilder.Entity<Aircraft>()
+                .HasRequired(c => c.Company)
+                .WithMany(m => m.Aircrafts)
+                .HasForeignKey(m => m.CompanyId);
 
-            //modelBuilder.Entity<Country>()
-            //      .HasMany(c => c.Companies)
-            //      .WithOne(e => e.Country);
+            modelBuilder.Entity<Aircraft>()
+                .HasRequired(c => c.Model)
+                .WithMany(m => m.Aircrafts)
+                .HasForeignKey(m => m.ModelId);
 
         }
         //one dataset prop for each table:
@@ -62,5 +60,44 @@ namespace FlightsCode.DBconfig
         public DbSet<Company> Companies { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Aircraft> Aircrafts { get; set; }
+
+        public List<Aircraft> GetBelongsToEU()
+        {
+            List<Aircraft> EUAircrafts = new List<Aircraft>();
+            DataContext ctx = new DataContext();
+
+            foreach (Aircraft Aircraft in Aircrafts)
+                {
+                    if (Aircraft.Company.Country.BelongsToEU)
+                    {
+                    EUAircrafts.Add(Aircraft);
+
+                    Console.WriteLine(Aircraft.Model.Number + " / "
+                            + Aircraft.TailNumber + " / "
+                            + Aircraft.Company.Name + " / "
+                            + Aircraft.Company.Country.Name);
+                    }
+                }
+            return EUAircrafts;
+        }
+        public List<Aircraft> GetNonEUAircrafts()
+        {
+            List<Aircraft> NonEUAircrafts = new List<Aircraft>();
+            DataContext ctx = new DataContext();
+
+            foreach (Aircraft Aircraft in Aircrafts)
+            {
+                if (!Aircraft.Company.Country.BelongsToEU)
+                {
+                    NonEUAircrafts.Add(Aircraft);
+
+                    Console.WriteLine(Aircraft.Model.Number + " / "
+                            + Aircraft.TailNumber + " / "
+                            + Aircraft.Company.Name + " / "
+                            + Aircraft.Company.Country.Name);
+                }
+            }
+            return NonEUAircrafts;
+        }
     }
 }
