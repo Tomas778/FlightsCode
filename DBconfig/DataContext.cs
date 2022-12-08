@@ -16,7 +16,7 @@ namespace FlightsCode.DBconfig
         {
             ConnectionString = new SQLiteConnectionStringBuilder()
             {
-                DataSource = "MySqliteDB.db",
+                DataSource = "MySqliteDB.db",  //Set same name as created DB
                 ForeignKeys = true
             }.ConnectionString
         }, true)
@@ -29,7 +29,9 @@ namespace FlightsCode.DBconfig
             base.OnModelCreating(modelBuilder);
 
 
-            //Releations, fluentAPI...
+            //Configuring a Relationship via fluentAPI => EF6
+            //Most dificult part to set relations between primary and foreign KEY's
+
             modelBuilder.Entity<Country>()
                            .HasMany(c => c.Companies);
 
@@ -55,12 +57,12 @@ namespace FlightsCode.DBconfig
 
         }
         //one dataset prop for each table:
-        //public DbSet<Person> People { get; set; }
         public DbSet<Country> Countries { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Aircraft> Aircrafts { get; set; }
 
+        //Left as example how it can be done in same ctx DO NOT USE ANYMORE!!!!!!!
         //public List<Aircraft> GetBelongsToEU()
         //{
         //    List<Aircraft> EUAircrafts = new List<Aircraft>();
@@ -80,24 +82,6 @@ namespace FlightsCode.DBconfig
         //        }
         //    return EUAircrafts;
         //}
-        //public List<Aircraft> GetNonEUAircrafts()
-        //{
-        //    List<Aircraft> NonEUAircrafts = new List<Aircraft>();
-        //    DataContext ctx = new DataContext();
-
-        //    foreach (Aircraft Aircraft in Aircrafts)
-        //    {
-        //        if (!Aircraft.Company.Country.BelongsToEU)
-        //        {
-        //            NonEUAircrafts.Add(Aircraft);
-
-        //            Console.WriteLine(Aircraft.Model.Number + " / "
-        //                    + Aircraft.TailNumber + " / "
-        //                    + Aircraft.Company.Name + " / "
-        //                    + Aircraft.Company.Country.Name);
-        //        }
-        //    }
-        //    return NonEUAircrafts;
-        //}
+        
     }
 }

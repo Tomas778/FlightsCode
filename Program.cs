@@ -1,7 +1,9 @@
 ﻿using FlightsCode.DBconfig;
 using FlightsCode.Models;
 using FlightsCode.PrepeareTables;
+using FlightsCode.Services;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Dynamic;
@@ -21,8 +23,8 @@ namespace FlightsCode
     {
         static void Main(string[] args)
         {
-            const string dbfile = "URI=file:MySqliteDB.db";
-            const string dbfilestring = "MySqliteDB.db";
+            const string dbfile = "URI=file:MySqliteDB.db"; //Debug folder
+            const string dbfilestring = "MySqliteDB.db"; //Predifined DB name
 
             //===================Create DB and Tables if not exists
             if (System.IO.File.Exists(Path.Combine(Directory.GetCurrentDirectory(), dbfilestring)))
@@ -32,24 +34,35 @@ namespace FlightsCode
             else
             {
                 SQLiteConnection connection = new SQLiteConnection(dbfile);
-                connection.Open();
-                string coutries_tbl = "create table Country (Id integer primary key autoincrement, " +
-                    "Code text, Name text, Continent text, BelongsToEU bool);";
+                connection.Open(); //Open connection with DB
+
+                //Building SQL query string for New Tables
+
+                string coutries_tbl = @"CREATE TABLE Country (Id integer primary key autoincrement, 
+                                        Code text, Name text, Continent text, BelongsToEU bool);";
+
                 SQLiteCommand command1 = new SQLiteCommand(coutries_tbl, connection);
-                string companies_tbl = "create table Company (Id integer primary key autoincrement, " +
-                    "Name text, CountryId integer, " +
-                    "FOREIGN KEY(CountryId) REFERENCES Country(Id));";
+
+                string companies_tbl = "CREATE TABLE Company (Id integer primary key autoincrement, " +
+                                       "Name text, CountryId integer, " +
+                                       "FOREIGN KEY(CountryId) REFERENCES Country(Id));";
+
                 SQLiteCommand command2 = new SQLiteCommand(companies_tbl, connection);
-                string models_tbl = "create table Model (Id integer primary key autoincrement, " +
-                    "Number text, Description text);";
+
+                string models_tbl = "CREATE TABLE Model (Id integer primary key autoincrement, " +
+                                    "Number text, Description text);";
+
                 SQLiteCommand command3 = new SQLiteCommand(models_tbl, connection);
-                string aircrafts_tbl = "create table Aircraft (Id integer primary key autoincrement, " +
-                    "ModelId integer, " +
-                    "CompanyId integer, " +
-                    "TailNumber text, " +
-                    "FOREIGN KEY(ModelId) REFERENCES Model(Id), " +
-                    "FOREIGN KEY(CompanyId) REFERENCES Company(Id));";
+
+                string aircrafts_tbl = "CREATE TABLE Aircraft (Id integer primary key autoincrement, " +
+                                       "ModelId integer, " +
+                                       "CompanyId integer, " +
+                                       "TailNumber text, " +
+                                       "FOREIGN KEY(ModelId) REFERENCES Model(Id), " +
+                                       "FOREIGN KEY(CompanyId) REFERENCES Company(Id));";
+
                 SQLiteCommand command4 = new SQLiteCommand(aircrafts_tbl, connection);
+
                 command1.ExecuteNonQuery();
                 command2.ExecuteNonQuery();
                 command3.ExecuteNonQuery();
@@ -58,6 +71,8 @@ namespace FlightsCode
             }
             //=====================End SQLite DB with Tables
 
+            //Create test Objects
+            //Everything is done by Primary Key and foreign Key relationship in DB
 
             using (var ctx = new DataContext())
             {
@@ -132,18 +147,36 @@ namespace FlightsCode
                 ctx.SaveChanges();          //Save Aircrafts
                 ctx.Dispose();
             }
+            //================Done with New Objects
 
 
-            //Get\Lists lists
+            List<Aircraft> EUAircrafts = new List<Aircraft>();
+            List<Aircraft> NonEUAirfcrafts = new List<Aircraft>();
+
+            //Get lists(EU / NonEU) from DataContext 
             using (var ctx = new DataContext())
             {
-                List<Aircraft> EUAircrafts =                                          //Returns EU Aircrafts
-                    ctx.Aircrafts.Where(x => x.Company.Country.BelongsToEU).ToList();
+                //Get relevant Objects from Tables into Context
+                ctx.Companies.ToList();
+                ctx.Countries.ToList();
+                ctx.Models.ToList();
 
-                List<Aircraft> NonEUAirfcrafts =                                      //Returns Non EU Aircrafts
-                    ctx.Aircrafts.Where(x => !x.Company.Country.BelongsToEU).ToList();
+                //Returns EU Aircrafts
+                EUAircrafts = ctx.Aircrafts.Where(x => x.Company.Country.BelongsToEU).ToList();
 
+                //Returns Non EU Aircrafts
+                NonEUAirfcrafts = ctx.Aircrafts.Where(x => !x.Company.Country.BelongsToEU).ToList();
             }
+
+            //Use same Aircraft lists from above to send report vie e-mail
+            SendEmailReport emailToCustomer = new SendEmailReport();
+            emailToCustomer.EmailSend(EUAircrafts); //Send EU Aircrafts
+            emailToCustomer.EmailSend(NonEUAirfcrafts); //Send Non EU Aircrafts
+
+            //Use same Aircraft lists from above to generate HTML
+            GenerateHTML htmlReport = new GenerateHTML();
+            htmlReport.GenerateHTMLraport(EUAircrafts, "C:\\Users\\SYT\\Desktop\\EUoutput.html"); //Generate EU Aircrafts. Change HTML directory
+            htmlReport.GenerateHTMLraport(NonEUAirfcrafts, "C:\\Users\\SYT\\Desktop\\NonEUoutput.html"); //Generate Non EUAircrafts. Change HTML directory
 
             Console.ReadLine(); //Stop
         }

@@ -37,6 +37,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aspose.HTML, Version=22.11.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
+      <HintPath>packages\Aspose.HTML.22.11.0\lib\net40\Aspose.HTML.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -68,10 +71,12 @@
     <Compile Include="Models\Model.cs" />
     <Compile Include="Models\Company.cs" />
     <Compile Include="Models\Country.cs" />
-    <Compile Include="PrepeareTables\CountryTable.cs" />
+    <Compile Include="===ONLY for Testing\CountryTable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DBconfig\SQLiteConfig.cs" />
+    <Compile Include="Services\GenerateHTML.cs" />
+    <Compile Include="Services\SendEmailReport.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
